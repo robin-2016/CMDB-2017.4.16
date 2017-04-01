@@ -7,7 +7,7 @@ sys.setdefaultencoding('utf-8')
 from flask import Flask,render_template,request,redirect,url_for
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm
-from conn import Hosts
+from conn import Hosts,Selectdata
 from wtforms import TextField,validators,SubmitField
 
 app = Flask(__name__)
@@ -53,8 +53,8 @@ def insert():
 	message = ""
 	if request.method == 'POST':
 		if myform.validate_on_submit():
-			hostdata = Hosts(myform.htype.data,myform.mroom.data,myform.status.data,myform.hostname.data,myform.app.data,myform.ip.data,myform.user.data,myform.mip.data,myform.os.data,myform.active.data,myform.location.data,myform.produce.data,myform.warranty.data,myform.model.data,myform.serial.data,myform.cpu.data,myform.ram.data,myform.disk.data,myform.storage.data)	
-			hostdata.insertdata()
+			hostinsert = Hosts(myform.htype.data,myform.mroom.data,myform.status.data,myform.hostname.data,myform.app.data,myform.ip.data,myform.user.data,myform.mip.data,myform.os.data,myform.active.data,myform.location.data,myform.produce.data,myform.warranty.data,myform.model.data,myform.serial.data,myform.cpu.data,myform.ram.data,myform.disk.data,myform.storage.data)	
+			hostinsert.insertdata()
 			myform.htype.data=None
 			myform.mroom.data=None
 			myform.status.data=None
@@ -89,5 +89,33 @@ def updatedb():
 	form.mroom.data="网信"
 	return render_template('update.html',name=name,message=message,form=form)
 
+@app.route('/ip/<ip>',methods = ['GET','POST'])
+def updata2(ip):
+	message = ""
+	myform = UpdateForm(request.form)
+	hostupdate = Selectdata(str(ip))
+	data = hostupdate.selectip()
+	myform.htype.data=data[1]
+	myform.mroom.data=data[2]
+	myform.status.data=data[3]
+	myform.hostname.data=data[4]
+	myform.app.data=data[5]
+	myform.ip.data=data[6]
+	myform.user.data=data[7]
+	myform.mip.data=data[8]
+	myform.os.data=data[9]
+	myform.active.data=data[10]
+	myform.location.data=data[11]
+	myform.produce.data=data[12]
+	myform.warranty.data=data[13]
+	myform.model.data=data[14]
+	myform.serial.data=data[15]
+	myform.cpu.data=data[16]
+	myform.ram.data=data[17]
+	myform.disk.data=data[18]
+	myform.storage.data=data[19]
+	return render_template('update.html',name=name,message=message,form=myform)
+#	return render_template('update.html',name=name,message=message,form=myform)
+	
 if __name__ == '__main__':
 	app.run(host='0.0.0.0')

@@ -49,3 +49,14 @@ class Hosts(object):
 		data.append(data1)
 		data.append(data2)
 		return data
+class Selectdata(object):
+	def selectip(ip):
+		dbconn = get_conn()
+		cursor = dbconn.cursor()
+		sql = "select * from host where ip = '%s'"
+		cursor.execute(sql,ip)
+		data = cursor.fetchall()
+		dbconn.commit()
+		cursor.close()
+		dbconn.close()
+		return data
