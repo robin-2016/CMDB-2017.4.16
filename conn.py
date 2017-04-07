@@ -49,12 +49,21 @@ class Hosts(object):
 		data.append(data1)
 		data.append(data2)
 		return data
-class Selectdata(object):
-	def selectip(ip):
+	def updatehost(self):
 		dbconn = get_conn()
 		cursor = dbconn.cursor()
-		sql = "select * from host where ip = '%s'"
-		cursor.execute(sql,ip)
+		sql = "UPDATE host SET type=%s,mroom=%s,status=%s,hostname=%s,app=%s,user=%s,managerip=%s,os=%s,active=%s,location=%s,produce=%s,warranty=%s,model=%s,serial=%s,cpu=%s,ram=%s,disk=%s,storage=%s WHERE ip=%s"
+		cursor.execute(sql,(self.htype,self.mroom,self.status,self.hostname,self.app,self.user,self.mip,self.os,self.active,self.location,self.produce,self.warranty,self.model,self.serial,self.cpu,self.ram,self.disk,self.storage,self.ip))
+		dbconn.commit()
+		cursor.close()
+		dbconn.close()
+class Selectupdate(object):
+	def selectip(self,ip):
+		dbconn = get_conn()
+		cursor = dbconn.cursor()
+		sql = "select * from host where ip = %s"
+		iptest = (ip,)
+		cursor.execute(sql,iptest)
 		data = cursor.fetchall()
 		dbconn.commit()
 		cursor.close()
