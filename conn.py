@@ -69,3 +69,13 @@ class Selectupdate(object):
 		cursor.close()
 		dbconn.close()
 		return data
+class Deldata(object):
+	def delhost(self,delip):
+		dbconn = get_conn()
+		cursor = dbconn.cursor()
+		sql = "delete from host where ip = %s"
+		iptest = (delip,)
+		cursor.execute(sql,iptest)
+		dbconn.commit()
+		cursor.close()
+		dbconn.close()

@@ -1,14 +1,10 @@
 #/bin/python
 #-*-coding=utf-8-*-
 
-import sys
-reload(sys)
-sys.setdefaultencoding('utf-8')
-from flask import Flask,render_template,request,redirect,url_for,flash
+from flask import Flask,render_template,request,redirect,url_for,flash,session
 from flask_bootstrap import Bootstrap
-from flask_wtf import FlaskForm
-from conn import Hosts,Selectupdate
-from wtforms import TextField,validators,SubmitField
+from conn import Hosts,Selectupdate,Deldata
+from models import InsertForm,UpdateForm,DelForm
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -16,32 +12,6 @@ app.config['SECRET_KEY'] = 'test321'
 
 name = "xuhongbin"
 
-class FormClass(FlaskForm):
-	htype = TextField("类型",[validators.Required()])
-	mroom = TextField("机房",[validators.Required()])
-	status = TextField("状态",[validators.Required()])
-	hostname = TextField("主机名",[validators.Required()])
-	app = TextField("应用名称",[validators.Required()])
-#	ip = TextField("ip",[validators.Required()])
-	ip = TextField("内网IP",[validators.IPAddress()])
-	user = TextField("应用负责人",[validators.Required()])
-	mip = TextField("管理IP",[validators.Required()])
-	os = TextField("操作系统",[validators.Required()])
-	active = TextField("激活",[validators.Required()])
-	location = TextField("机架位置",[validators.Required()])
-	produce = TextField("生产商",[validators.Required()])
-	warranty = TextField("保修日期",[validators.Required()])
-	model = TextField("设备型号",[validators.Required()])
-	serial = TextField("序列号",[validators.Required()])
-	cpu = TextField("CPU",[validators.Required()])
-	ram = TextField("内存",[validators.Required()])
-	disk = TextField("硬盘Raid",[validators.Required()])
-	storage = TextField("外连存储",[validators.Required()])
-class InsertForm(FormClass):
-	submit = SubmitField("新增")
-class UpdateForm(FormClass):
-	ip = TextField("IP")
-	submit = SubmitField("更新")
 @app.route('/')
 def index():
 	host = Hosts.selectdata()	
@@ -92,38 +62,55 @@ def updatedb():
 def update2(ip):
 	myform = UpdateForm(request.form)
 	ipstring = str(ip.encode("utf-8"))
-	hostupdate = Selectupdate()
-	data = hostupdate.selectip(ipstring)
-	myform.htype.data=data[0][1]
-	myform.mroom.data=data[0][2]
-	myform.status.data=data[0][3]
-	myform.hostname.data=data[0][4]
-	myform.app.data=data[0][5]
-	hip=data[0][6]
-	myform.user.data=data[0][7]
-	myform.mip.data=data[0][8]
-	myform.os.data=data[0][9]
-	myform.active.data=data[0][10]
-	myform.location.data=data[0][11]
-	myform.produce.data=data[0][12]
-	myform.warranty.data=data[0][13]
-	myform.model.data=data[0][14]
-	myform.serial.data=data[0][15]
-	myform.cpu.data=data[0][16]
-	myform.ram.data=data[0][17]
-	myform.disk.data=data[0][18]
-	myform.storage.data=data[0][19]
-	if request.method == 'POST':
+	if request.method == 'GET':
+		hostupdate = Selectupdate()
+		data = hostupdate.selectip(ipstring)
+		myform.htype.data=data[0][1]
+		myform.mroom.data=data[0][2]
+		myform.status.data=data[0][3]
+		myform.hostname.data=data[0][4]
+		myform.app.data=data[0][5]
+		myform.ip.data=data[0][6]
+		myform.user.data=data[0][7]
+		myform.mip.data=data[0][8]
+		myform.os.data=data[0][9]
+		myform.active.data=data[0][10]
+		myform.location.data=data[0][11]
+		myform.produce.data=data[0][12]
+		myform.warranty.data=data[0][13]
+		myform.model.data=data[0][14]
+		myform.serial.data=data[0][15]
+		myform.cpu.data=data[0][16]
+		myform.ram.data=data[0][17]
+		myform.disk.data=data[0][18]
+		myform.storage.data=data[0][19]
+	elif request.method == 'POST':
                 if myform.validate_on_submit():
                         hostupdate = Hosts(myform.htype.data,myform.mroom.data,myform.status.data,myform.hostname.data,myform.app.data,myform.ip.data,myform.user.data,myform.mip.data,myform.os.data,myform.active.data,myform.location.data,myform.produce.data,myform.warranty.data,myform.model.data,myform.serial.data,myform.cpu.data,myform.ram.data,myform.disk.data,myform.storage.data)
                         hostupdate.updatehost()
-			flash('Update Successful!')
 			return redirect(url_for('index'))
 		else:
 			flash('Update Failed!')	
-			return render_template('update.html',name=name,hip=hip,form=myform)
-	return render_template('update.html',name=name,hip=hip,form=myform)
+			return render_template('update.html',name=name,form=myform)
+	return render_template('update.html',name=name,form=myform)
 #	return render_template('update.html',name=name,message=message,form=myform)
+@app.route('/export')
+def exportexcle():
+	return redirect(url_for('index'))
 	
+@app.route('/del',methods =['GET','POST'])
+def delhost():
+	myform = DelForm(request.form)
+	if request.method == 'POST':
+		if myform.validate_on_submit():
+			delip = myform.delip.data
+			hostdel = Deldata()
+			hostdel.delhost(delip)
+			return redirect(url_for('index'))
+		else:
+			flash('Delete Failed!')
+			return render_template('del.html',name=name,form=myform)
+	return render_template('del.html',name=name,form=myform)
+
 if __name__ == '__main__':
 	app.run(host='0.0.0.0',debug=True)
