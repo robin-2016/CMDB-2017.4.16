@@ -4,15 +4,29 @@
 from flask import Flask,render_template,request,redirect,url_for,flash,session
 from flask_bootstrap import Bootstrap
 from conn import Hosts,Selectupdate,Deldata
-from models import InsertForm,UpdateForm,DelForm
+from models import InsertForm,UpdateForm,DelForm,LoginForm
+from flask_login import login_user
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 app.config['SECRET_KEY'] = 'test321'
 
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql:// root:'&UJM7ujm'@10.0.2.10/CMDB"
+app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
+db = SQLAlchemy(app)
+
 name = "xuhongbin"
 
-@app.route('/')
+@app.route('/',methods = ['GET','POST'])
+def login():
+	myform = LoginForm()
+	if myform.validate_on_submit():
+		username = myform.username.data
+		
+	return render_template('login.html',name=name,form=myform)
+
+@app.route('/main')
 def index():
 	host = Hosts.selectdata()	
 	rows = int(str(host[1][0][0]))
