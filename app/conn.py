@@ -1,9 +1,9 @@
 import MySQLdb
 
 def get_conn():
-	conn = MySQLdb.connect(host = "10.0.2.10",user = "root",passwd = "&UJM7ujm",db = "CMDB",charset="utf8")
+	conn = MySQLdb.connect(host = "192.168.192.15",user = "root",passwd = "&UJM7ujm",db = "CMDB",charset="utf8")
 	return conn
-class Hosts(object):
+class Hostservers(object):
 	def __init__(self,htype,mroom,status,hostname,app,ip,user,mip,os,active,location,produce,warranty,model,serial,cpu,ram,disk,storage):
 		self.htype = htype
                 self.mroom = mroom

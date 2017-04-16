@@ -5,7 +5,6 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from flask_wtf import FlaskForm
 from wtforms import TextField,validators,SubmitField,StringField,PasswordField,BooleanField
-from cmdb import db
 
 class FormClass(FlaskForm):
         htype = TextField("*类型",[validators.Required()])
@@ -42,6 +41,3 @@ class LoginForm(FlaskForm):
 	passwd = PasswordField("密码：",[validators.Required()])
 	remember_me = BooleanField("记住我")
 	submit = SubmitField("登录")
-
-class hosts(db.Model):
-	

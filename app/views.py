@@ -1,43 +1,36 @@
 #/bin/python
 #-*-coding=utf-8-*-
 
-from flask import Flask,render_template,request,redirect,url_for,flash,session
-from flask_bootstrap import Bootstrap
-from conn import Hosts,Selectupdate,Deldata
+from main import main
+from flask import render_template,request,redirect,url_for,flash,session
 from models import InsertForm,UpdateForm,DelForm,LoginForm
-from flask_login import login_user
-from flask_sqlalchemy import SQLAlchemy
+from conn import Hostservers,Selectupdate,Deldata
+from flask_login import login_user,login_required
 
-app = Flask(__name__)
-bootstrap = Bootstrap(app)
-app.config['SECRET_KEY'] = 'test321'
-
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql:// root:'&UJM7ujm'@10.0.2.10/CMDB"
-app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = True
-db = SQLAlchemy(app)
 
 name = "xuhongbin"
 
-@app.route('/',methods = ['GET','POST'])
+@main.route('/',methods = ['GET','POST'])
 def login():
+	print 'test'
 	myform = LoginForm()
 	if myform.validate_on_submit():
 		username = myform.username.data
 		
 	return render_template('login.html',name=name,form=myform)
 
-@app.route('/main')
+@main.route('/mainhost')
 def index():
-	host = Hosts.selectdata()	
+	host = Hostservers.selectdata()	
 	rows = int(str(host[1][0][0]))
 	return render_template('data2.html',name=name,rows=rows,host=host[0])
 
-@app.route('/insert',methods = ['GET','POST'])
+@main.route('/insert',methods = ['GET','POST'])
 def insert():
 	myform = InsertForm(request.form)
 	if request.method == 'POST':
 		if myform.validate_on_submit():
-			hostinsert = Hosts(myform.htype.data,myform.mroom.data,myform.status.data,myform.hostname.data,myform.app.data,myform.ip.data,myform.user.data,myform.mip.data,myform.os.data,myform.active.data,myform.location.data,myform.produce.data,myform.warranty.data,myform.model.data,myform.serial.data,myform.cpu.data,myform.ram.data,myform.disk.data,myform.storage.data)	
+			hostinsert = Hostservers(myform.htype.data,myform.mroom.data,myform.status.data,myform.hostname.data,myform.app.data,myform.ip.data,myform.user.data,myform.mip.data,myform.os.data,myform.active.data,myform.location.data,myform.produce.data,myform.warranty.data,myform.model.data,myform.serial.data,myform.cpu.data,myform.ram.data,myform.disk.data,myform.storage.data)	
 			hostinsert.insertdata()
 			myform.htype.data=None
 			myform.mroom.data=None
@@ -65,14 +58,15 @@ def insert():
 			return render_template('insert.html',name=name,form=myform)
 	return render_template('insert.html',name=name,form=myform)
 
-@app.route('/update',methods = ['GET','POST'])
+@main.route('/update',methods = ['GET','POST'])
 def updatedb():
 	form = UpdateForm(request.form)
 	form.htype.data="PM"
 	form.mroom.data="网信"
 	return render_template('update.html',name=name,form=form)
 
-@app.route('/ip/<ip>',methods = ['GET','POST'])
+@main.route('/ip/<ip>',methods = ['GET','POST'])
+@login_required
 def update2(ip):
 	myform = UpdateForm(request.form)
 	ipstring = str(ip.encode("utf-8"))
@@ -100,7 +94,7 @@ def update2(ip):
 		myform.storage.data=data[0][19]
 	elif request.method == 'POST':
                 if myform.validate_on_submit():
-                        hostupdate = Hosts(myform.htype.data,myform.mroom.data,myform.status.data,myform.hostname.data,myform.app.data,myform.ip.data,myform.user.data,myform.mip.data,myform.os.data,myform.active.data,myform.location.data,myform.produce.data,myform.warranty.data,myform.model.data,myform.serial.data,myform.cpu.data,myform.ram.data,myform.disk.data,myform.storage.data)
+                        hostupdate = Hostservers(myform.htype.data,myform.mroom.data,myform.status.data,myform.hostname.data,myform.app.data,myform.ip.data,myform.user.data,myform.mip.data,myform.os.data,myform.active.data,myform.location.data,myform.produce.data,myform.warranty.data,myform.model.data,myform.serial.data,myform.cpu.data,myform.ram.data,myform.disk.data,myform.storage.data)
                         hostupdate.updatehost()
 			return redirect(url_for('index'))
 		else:
@@ -108,11 +102,12 @@ def update2(ip):
 			return render_template('update.html',name=name,form=myform)
 	return render_template('update.html',name=name,form=myform)
 #	return render_template('update.html',name=name,message=message,form=myform)
-@app.route('/export')
+@main.route('/export')
 def exportexcle():
 	return redirect(url_for('index'))
 	
-@app.route('/del',methods =['GET','POST'])
+@main.route('/del',methods =['GET','POST'])
+@login_required
 def delhost():
 	myform = DelForm(request.form)
 	if request.method == 'POST':
@@ -126,5 +121,3 @@ def delhost():
 			return render_template('del.html',name=name,form=myform)
 	return render_template('del.html',name=name,form=myform)
 
-if __name__ == '__main__':
-	app.run(host='0.0.0.0',debug=True)
