@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+<div class="container">
+	<div class="container">
+	<h1>注册</h1>
+	</div>
+	{% for message in get_flashed_messages() %}
+	{{ message }}
+	{% endfor %}
+	{{ form.csrf_token }}
+	<div class="col-sm-8">
+	{{ wtf.quick_form(form) }}
+	</div>
+</div>
+{% endblock %}
