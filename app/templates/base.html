@@ -21,7 +21,7 @@
                 <li><a href="#">Hello,{{ name }}</a></li>
             </ul>
 	    <ul class="nav navbar-nav navbar-right">
-		{% if name %}
+		{% if name != 'Guest' %}
 		<li><a href="{{ url_for('main.login') }}">登出</a></li>
 		{% else %}
 		{% endif %}

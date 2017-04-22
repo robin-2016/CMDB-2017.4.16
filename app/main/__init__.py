@@ -1,28 +1,47 @@
 from flask import Blueprint
 from flask import render_template,request,redirect,url_for,flash,session
-from ..models import InsertForm,UpdateForm,DelForm,LoginForm
+from ..models import InsertForm,UpdateForm,DelForm,LoginForm,UseraddForm
 from ..conn import Hostservers,Selectupdate,Deldata
-from flask_login import login_user,login_required
+from flask_login import login_user,login_required,current_user
+from ..dbmodels import Users
+from .. import db
 
 main = Blueprint('main',__name__)
 
-name = 'xuhongbin'
+name = 'Guest'
 
 @main.route('/',methods = ['GET','POST'])
 def login():
         myform = LoginForm()
         if myform.validate_on_submit():
-                username = myform.username.data
+                username = Users.query.filter_by(name=myform.username.data).first()
+		if username is not None and username.verify_password(myform.passwd.data):
+			login_user(username,myform.remember_me.data)
+			return redirect(request.args.get('next') or url_for('main.index'))
+		flash('Username or Password is error!')		
+        return render_template('login.html',name=current_user.name,form=myform)
+@main.route('/useradd',methods = ['GET','POST'])
+def useradd():
+	myform = UseraddForm()
+        if myform.validate_on_submit():
+		u = Users()
+		u.password_hash = myform.passwd.data
+		user = Users(name=myform.username.data,passwd=u.passwd)
+		db.session.add(user)
+		db.session.commit()
+		flash('User add Successful!')
+        return render_template('useradd.html',name=current_user.name,form=myform)
+	
 
-        return render_template('login.html',name=name,form=myform)
-
-@main.route('/mainhost')
+@main.route('/hosts')
+@login_required
 def index():
 	host = Hostservers.selectdata()	
 	rows = int(str(host[1][0][0]))
-	return render_template('data2.html',name=name,rows=rows,host=host[0])
+	return render_template('data2.html',name=current_user.name,rows=rows,host=host[0])
 
 @main.route('/insert',methods = ['GET','POST'])
+@login_required
 def insert():
 	myform = InsertForm(request.form)
 	if request.method == 'POST':
@@ -49,17 +68,17 @@ def insert():
 			myform.disk.data=None
 			myform.storage.data=None
 			flash("Insert Successful!")
-			return render_template('insert.html',name=name,form=myform)
+			return render_template('insert.html',name=current_user.name,form=myform)
 		else:
 			flash("Insert Failed!")
-			return render_template('insert.html',name=name,form=myform)
-	return render_template('insert.html',name=name,form=myform)
+			return render_template('insert.html',name=current_user.name,form=myform)
+	return render_template('insert.html',name=current_user.name,form=myform)
 
-@main.route('/update',methods = ['GET','POST'])
-def updatedb():
-	form = UpdateForm(request.form)
-	form.htype.data="PM"
-	return render_template('update.html',name=name,form=form)
+#@main.route('/update',methods = ['GET','POST'])
+#def updatedb():
+#	form = UpdateForm(request.form)
+#	form.htype.data="PM"
+#	return render_template('update.html',name=current_user.name,form=form)
 
 @main.route('/ip/<ip>',methods = ['GET','POST'])
 @login_required
@@ -95,8 +114,8 @@ def update2(ip):
 			return redirect(url_for('index'))
 		else:
 			flash('Update Failed!')	
-			return render_template('update.html',name=name,form=myform)
-	return render_template('update.html',name=name,form=myform)
+			return render_template('update.html',name=current_user.name,form=myform)
+	return render_template('update.html',name=current_user.name,form=myform)
 #	return render_template('update.html',name=name,message=message,form=myform)
 @main.route('/export')
 def exportexcle():
@@ -114,6 +133,6 @@ def delhost():
 			return redirect(url_for('index'))
 		else:
 			flash('Delete Failed!')
-			return render_template('del.html',name=name,form=myform)
-	return render_template('del.html',name=name,form=myform)
+			return render_template('del.html',name=current_user.name,form=myform)
+	return render_template('del.html',name=current_user.name,form=myform)
 

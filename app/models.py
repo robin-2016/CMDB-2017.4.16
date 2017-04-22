@@ -5,6 +5,7 @@ reload(sys)
 sys.setdefaultencoding('utf-8')
 from flask_wtf import FlaskForm
 from wtforms import TextField,validators,SubmitField,StringField,PasswordField,BooleanField
+from wtforms.validators import Required,Length,Regexp,EqualTo
 
 class FormClass(FlaskForm):
         htype = TextField("*类型",[validators.Required()])
@@ -41,3 +42,9 @@ class LoginForm(FlaskForm):
 	passwd = PasswordField("密码：",[validators.Required()])
 	remember_me = BooleanField("记住我")
 	submit = SubmitField("登录")
+
+class UseraddForm(FlaskForm):
+	username = StringField("用户名：",validators=[Required(),Length(1,100),Regexp('^[A-Za-z][A-Za-z0-9_.]*$',0,'只能使用字母、数字、下划线和点号！')])
+	passwd = PasswordField("密码：",validators=[Required(),EqualTo('passwd2',message='两次密码不相同！')])
+	passwd2 = PasswordField("确认密码：",validators=[Required()])
+	submit = SubmitField('注册')
