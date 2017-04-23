@@ -5,10 +5,6 @@
 	<div class="container">
 	<h1>登录</h1>
 	</div>
-	{% for message in get_flashed_messages() %}
-	{{ message }}
-	{% endfor %}
-	{{ form.csrf_token }}
 	<div class="col-sm-8">
 	{{ wtf.quick_form(form) }}
 	</div>

@@ -1,37 +1,10 @@
 from flask import Blueprint
 from flask import render_template,request,redirect,url_for,flash,session
-from ..models import InsertForm,UpdateForm,DelForm,LoginForm,UseraddForm
+from ..models import InsertForm,UpdateForm,DelForm
 from ..conn import Hostservers,Selectupdate,Deldata
-from flask_login import login_user,login_required,current_user
-from ..dbmodels import Users
-from .. import db
+from flask_login import login_required,current_user
 
 main = Blueprint('main',__name__)
-
-name = 'Guest'
-
-@main.route('/',methods = ['GET','POST'])
-def login():
-        myform = LoginForm()
-        if myform.validate_on_submit():
-                username = Users.query.filter_by(name=myform.username.data).first()
-		if username is not None and username.verify_password(myform.passwd.data):
-			login_user(username,myform.remember_me.data)
-			return redirect(request.args.get('next') or url_for('main.index'))
-		flash('Username or Password is error!')		
-        return render_template('login.html',name=current_user.name,form=myform)
-@main.route('/useradd',methods = ['GET','POST'])
-def useradd():
-	myform = UseraddForm()
-        if myform.validate_on_submit():
-		u = Users()
-		u.password_hash = myform.passwd.data
-		user = Users(name=myform.username.data,passwd=u.passwd)
-		db.session.add(user)
-		db.session.commit()
-		flash('User add Successful!')
-        return render_template('useradd.html',name=current_user.name,form=myform)
-	
 
 @main.route('/hosts')
 @login_required
@@ -119,7 +92,7 @@ def update2(ip):
 #	return render_template('update.html',name=name,message=message,form=myform)
 @main.route('/export')
 def exportexcle():
-	return redirect(url_for('index'))
+	return redirect(url_for('main.index'))
 	
 @main.route('/del',methods =['GET','POST'])
 @login_required
