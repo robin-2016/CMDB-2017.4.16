@@ -8,10 +8,10 @@ class Config:
 		pass
 class DevelopmentConfig(Config):
 	DEBUG = True
-	SQLALCHEMY_DATABASE_URI = "mysql://root:&UJM7ujm@192.168.192.15:3306/CMDB"
+	SQLALCHEMY_DATABASE_URI = "mysql://root:&UJM7ujm@10.0.2.10:3306/CMDB"
 class ProductionConfig(Config):
 	DEBUG = True
-	SQLALCHEMY_DATABASE_URI = "mysql://root:'&UJM7ujm'@192.168.192.15:3306/CMDB"
+	SQLALCHEMY_DATABASE_URI = "mysql://root:'&UJM7ujm'@10.0.2.10:3306/CMDB"
 config = {
 	'development': DevelopmentConfig,
 	'production': ProductionConfig,
