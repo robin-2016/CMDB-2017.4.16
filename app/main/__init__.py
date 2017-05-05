@@ -1,7 +1,7 @@
 from flask import Blueprint
 from flask import render_template,request,redirect,url_for,flash,session
 from ..models import InsertForm,UpdateForm,DelForm
-from ..conn import Hostservers,Selectupdate,Deldata
+#from ..conn import Hostservers,Selectupdate,Deldata
 from flask_login import login_required,current_user
 from ..dbmodels import Hosts
 from .. import db
@@ -11,14 +11,13 @@ main = Blueprint('main',__name__)
 @main.route('/hosts')
 @login_required
 def index():
-	host = Hostservers.selectdata()	
-	rows = int(str(host[1][0][0]))
-	return render_template('data2.html',name=current_user.name,rows=rows,host=host[0])
+	host = Hosts.query.all()
+	return render_template('data2.html',name=current_user.name,host=host)
 
 @main.route('/insert',methods = ['GET','POST'])
 @login_required
 def insert():
-	myform = InsertForm(request.form)
+	myform = InsertForm()
 	if request.method == 'POST':
 		if myform.validate_on_submit():
 			hostinsert = Hosts(htype=myform.htype.data,mroom=myform.mroom.data,status=myform.status.data,hostname=myform.hostname.data,app=myform.app.data,ip=myform.ip.data,user=myform.user.data,managerip=myform.mip.data,os=myform.os.data,active=myform.active.data,location=myform.location.data,produce=myform.produce.data,warranty=myform.warranty.data,model=myform.model.data,serial=myform.serial.data,cpu=myform.cpu.data,ram=myform.ram.data,disk=myform.disk.data,storage=myform.storage.data)	
@@ -52,7 +51,7 @@ def insert():
 
 #@main.route('/update',methods = ['GET','POST'])
 #def updatedb():
-#	form = UpdateForm(request.form)
+#	form = UpdateForm()
 #	form.htype.data="PM"
 #	return render_template('update.html',name=current_user.name,form=form)
 
@@ -60,32 +59,50 @@ def insert():
 @login_required
 def update2(ip2):
 	myform = UpdateForm(request.form)
-	if request.method == 'GET':
-		hostdata = Hosts.query.filter_by(ip=str(ip2.encode("utf-8"))).all()
-		for hdata in hostdata:
-			myform.htype.data=hdata.htype
-			myform.mroom.data=hdata.mroom
-			myform.status.data=hdata.status
-			myform.hostname.data=hdata.hostname
-			myform.app.data=hdata.app
-			myform.ip.data=hdata.ip
-			myform.user.data=hdata.user
-			myform.mip.data=hdata.managerip
-			myform.os.data=hdata.os
-			myform.active.data=hdata.active
-			myform.location.data=hdata.location
-			myform.produce.data=hdata.produce
-			myform.warranty.data=hdata.warranty
-			myform.model.data=hdata.model
-			myform.serial.data=hdata.serial
-			myform.cpu.data=hdata.cpu
-			myform.ram.data=hdata.ram
-			myform.disk.data=hdata.disk
-			myform.storage.data=hdata.storage
-	elif request.method == 'POST':
-                if myform.validate_on_submit():
-			hostupdate = Hosts(htype=myform.htype.data,mroom=myform.mroom.data,status=myform.status.data,hostname=myform.hostname.data,app=myform.app.data,ip=myform.ip.data,user=myform.user.data,managerip=myform.mip.data,os=myform.os.data,active=myform.active.data,location=myform.location.data,produce=myform.produce.data,warranty=myform.warranty.data,model=myform.model.data,serial=myform.serial.data,cpu=myform.cpu.data,ram=myform.ram.data,disk=myform.disk.data,storage=myform.storage.data)	
-			db.session.update(hostupdate)
+	hostdata = Hosts.query.filter_by(ip=str(ip2.encode("utf-8"))).first()
+	myform.htype.data=hostdata.htype
+	myform.mroom.data=hostdata.mroom
+	myform.status.data=hostdata.status
+	myform.hostname.data=hostdata.hostname
+	myform.app.data=hostdata.app
+	myform.ip.data=hostdata.ip
+	myform.user.data=hostdata.user
+	myform.mip.data=hostdata.managerip
+	myform.os.data=hostdata.os
+	myform.active.data=hostdata.active
+	myform.location.data=hostdata.location
+	myform.produce.data=hostdata.produce
+	myform.warranty.data=hostdata.warranty
+	myform.model.data=hostdata.model
+	myform.serial.data=hostdata.serial
+	myform.cpu.data=hostdata.cpu
+	myform.ram.data=hostdata.ram
+	myform.disk.data=hostdata.disk
+	myform.storage.data=hostdata.storage
+	if request.method == 'POST':
+        	if myform.validate_on_submit():
+			hostdata.htype=request.form['htype']
+			hostdata.mroom=request.form['mroom']
+			hostdata.status=request.form['status']
+			hostdata.hostname=request.form['hostname']
+			hostdata.app=request.form['app']
+			hostdata.ip=request.form['ip']
+			hostdata.user=request.form['user']
+			hostdata.managerip=request.form['mip']
+			hostdata.os=request.form['os']
+			hostdata.active=request.form['active']
+			hostdata.location=request.form['location']
+			hostdata.produce=request.form['produce']
+			hostdata.warranty=request.form['warranty']
+			hostdata.model=request.form['model']
+			hostdata.serial=request.form['serial']
+			hostdata.cpu=request.form['cpu']
+			hostdata.ram=request.form['ram']
+			hostdata.disk=request.form['disk']
+			hostdata.storage=request.form['storage']
+			print request.form['disk']
+			print request.form['storage']
+			db.session.add(hostdata)
 			db.session.commit()
 			return redirect(url_for('main.index'))
 		else:
@@ -100,13 +117,16 @@ def exportexcle():
 @main.route('/del',methods =['GET','POST'])
 @login_required
 def delhost():
-	myform = DelForm(request.form)
+	myform = DelForm()
 	if request.method == 'POST':
 		if myform.validate_on_submit():
-			delhost = Hosts(ip=myform.delip.data)
-			db.session.delete(delhost)
-			db.session.commit()
-			return redirect(url_for('main.index'))
+			delhost = Hosts.query.filter_by(ip=str(myform.delip.data.encode("utf-8"))).first()
+			if delhost is not None:
+				db.session.delete(delhost)
+				db.session.commit()
+				return redirect(url_for('main.index'))
+			else:
+				flash('Delete Failed!')
 		else:
 			flash('Delete Failed!')
 			return render_template('del.html',name=current_user.name,form=myform)

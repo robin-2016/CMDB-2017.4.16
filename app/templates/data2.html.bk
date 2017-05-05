@@ -1,35 +1,9 @@
-{% extends "bootstrap/base.html" %}
-{% block title %}QB_CMDB{% endblock %}
-{% block navbar %}
-<div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle"data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">QB_CMDB</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-            </ul>
-	<div class="navbar-collapse collapse col-lg-1 pull-right">
-	    <ul class="nav navbar-nav">
-		<li><a href="#">Hello,{{ name }}</a></li>
-	    </ul>
-	</div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+{% extends "base.html" %}
 {% block content %}
 <div class="col-lg-2 pull-right">
 <a href="/insert"><button type="button" class="btn btn-default">新增</button></a>
-<a href="/update"><button type="button" class="btn btn-default">更新</button></a>
-<a href="#"><button type="button" class="btn btn-default">删除</button></a>
+<a href="/del"><button type="button" class="btn btn-default">删除</button></a>
+<a href="/export"><button type="button" class="btn btn-default">导出Excel</button></a>
 </div>
 <div>
 	<table class="table table-bordered">

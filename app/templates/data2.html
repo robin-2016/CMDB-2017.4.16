@@ -29,15 +29,27 @@
 	   <th>硬盘Raid</th>
 	   <th>外连存储</th>
 	  </tr>
-	  {% for a in range(0,rows) %}
+	  {% for a in host %}
 	     <tr>
-		{%for b in range(1,6) %}
-		  <th> {{ host[a][b] }} </th>
-		{%endfor%}
-		  <th><a href="/ip/{{ host[a][6] }}">{{ host[a][6]}}</a></th>
-		{%for b in range(7,20) %}
-		  <th> {{ host[a][b] }} </th>
-		{%endfor%}
+		  <th> {{a.htype}} </th>
+		  <th>{{a.mroom}}</th>
+		  <th>{{a.status}}</th>
+		  <th>{{a.hostname}}</th>
+		  <th>{{a.app}}</th>
+		  <th><a href="/ip/{{a.ip}}">{{a.ip}}</a></th>
+		  <th>{{a.user}}</th>
+		  <th>{{a.managerip}}</th>
+		  <th>{{a.os}}</th>
+		  <th>{{a.active}}</th>
+		  <th>{{a.location}}</th>
+		  <th>{{a.produce}}</th>
+		  <th>{{a.warranty}}</th>
+		  <th>{{a.model}}</th>
+		  <th>{{a.serial}}</th>
+		  <th>{{a.cpu}}</th>
+		  <th>{{a.ram}}</th>
+		  <th>{{a.disk}}</th>
+		  <th>{{a.storage}}</th>
 	     </tr>
 	  {%endfor%}
 </div>
