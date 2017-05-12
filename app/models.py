@@ -15,7 +15,7 @@ class FormClass(FlaskForm):
         hostname = TextField("*主机名",[validators.Required()])
         app = TextField("*应用名称",[validators.Required()])
 #       ip = TextField("ip",[validators.Required()])
-        ip = TextField("*内网IP",[validators.Required()])
+        ip = TextField("*内网IP",[validators.IPAddress()])
         user = TextField("*应用负责人",[validators.Required()])
         mip = TextField("管理IP")
         os = TextField("*操作系统",[validators.Required()])
@@ -49,6 +49,13 @@ class UseraddForm(FlaskForm):
 	passwd = PasswordField("密码：",validators=[Required(),EqualTo('passwd2',message='两次密码不相同！')])
 	passwd2 = PasswordField("确认密码：",validators=[Required()])
 	submit = SubmitField('新增用户')
+
 	def validate_username(self,field):
-		if Users.query.filter_by(name=filed.data).first():
+		if Users.query.filter_by(name=field.data).first():
 			raise ValidationError('用户名已经存在！')
+
+class ChangepwForm(FlaskForm):
+	passwdold = PasswordField("旧密码：",[validators.Required()])
+	passwd = PasswordField("新密码：",validators=[Required(),EqualTo('passwd2',message='两次密码不相同！')])
+	passwd2 = PasswordField("确认密码：",validators=[Required()])
+	submit = SubmitField('更改密码')

@@ -10,20 +10,24 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/hosts">QB_CMDB</a>
+            <a class="navbar-brand" href="#">QB_CMDB</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li><a href="/hosts">Home</a></li>
             </ul>
+	{%if session.get('role') == 'admin'%}
+            <ul class="nav navbar-nav">
+                <li><a href="/hosts">Management</a></li>
+            </ul>
+	{%endif%}
 	<div class="navbar-collapse collapse col-lg-1 pull-right">
             <ul class="nav navbar-nav">
-                <li><a href="#">Hello,{{ name }}</a></li>
+                <li><a href="{{ url_for('user.userchange')}}">Hello,{%if current_user.is_authenticated %}{{ current_user.name }}{%else%}Guest{%endif%}</a></li>
             </ul>
 	    <ul class="nav navbar-nav navbar-right">
-		{% if name != 'Guest' %}
+		{% if current_user.is_authenticated %}
 		<li><a href="{{ url_for('user.logout') }}">登出</a></li>
-		{% else %}
 		{% endif %}
 	    </ul>
         </div>
