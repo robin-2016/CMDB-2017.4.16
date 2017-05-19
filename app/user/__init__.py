@@ -1,13 +1,11 @@
 from flask import Blueprint
 from flask_login import login_user,logout_user,login_required,current_user
-from flask import flash,redirect,url_for,render_template,request,session
+from flask import flash,redirect,url_for,render_template,session
 from ..models import LoginForm,UseraddForm,ChangepwForm
 from .. import db
 from ..dbmodels import Users
 
 user = Blueprint('user',__name__)
-
-name = 'Guest'
 
 @user.route('/',methods = ['GET','POST'])
 def login():
@@ -50,7 +48,7 @@ def userchange():
 	myform = ChangepwForm()
         if myform.validate_on_submit():
                 user = Users.query.filter_by(name=current_user.name).first()
-                if user is not None and user.verify_password(myform.passwd.data):
+                if user is not None and user.verify_password(myform.passwdold.data):
 			user.password_hash = myform.passwd.data
 			db.session.add(user)
 			db.session.commit()

@@ -14,16 +14,19 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/hosts">Home</a></li>
+                <li><a href="/hosts">主页</a></li>
             </ul>
 	{%if session.get('role') == 'admin'%}
             <ul class="nav navbar-nav">
-                <li><a href="/hosts">Management</a></li>
+                <li><a href="#">账号管理</a></li>
             </ul>
 	{%endif%}
 	<div class="navbar-collapse collapse col-lg-1 pull-right">
             <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('user.userchange')}}">Hello,{%if current_user.is_authenticated %}{{ current_user.name }}{%else%}Guest{%endif%}</a></li>
+                <li><a href="#">Hello,{%if current_user.is_authenticated %}{{ current_user.name }}{%else%}Guest{%endif%}</a></li>
+            </ul>
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url_for('user.userchange')}}">修改密码</a></li>
             </ul>
 	    <ul class="nav navbar-nav navbar-right">
 		{% if current_user.is_authenticated %}
