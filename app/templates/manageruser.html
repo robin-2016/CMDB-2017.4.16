@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">x</button>
+        {{ message }}
+        </div>
+        {% endfor %}
+	<div class="col-sm-4">
+		<table class="table table-bordered" data-toggle="table">
+		 <thead>
+			<tr>
+			 <th>ID</th>
+			 <th>name</th>
+			 <th>role</th>
+		</thead>
+	</div>
+</div>
+{% endblock %}

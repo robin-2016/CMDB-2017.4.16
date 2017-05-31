@@ -26,5 +26,5 @@ def creat_app(config_name):
 	from .user import user as user_blueprint
 	app.register_blueprint(user_blueprint)
 	from .manageruser import manageruser as manageruser_blueprint
-	app.register_blueprint(manaageruser_blueprint)
+	app.register_blueprint(manageruser_blueprint,url_prefix='/manageruser')
 	return app
