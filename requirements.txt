@@ -10,3 +10,4 @@ SQLAlchemy==1.1.6
 Werkzeug==0.12.1
 WTForms==2.1
 xlrd==1.0.0
+paramiko==2.2.1

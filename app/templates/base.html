@@ -26,7 +26,7 @@
                 <li><a href="#">Hello,{%if current_user.is_authenticated %}{{ current_user.name }}{%else%}Guest{%endif%}</a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li><a href="{{ url_for('user.userchange')}}">修改密码</a></li>
+                <li><a href="{{ url_for('user.userchange')}}">{%if current_user.is_authenticated %}修改密码{%endif%}</a></li>
             </ul>
 	    <ul class="nav navbar-nav navbar-right">
 		{% if current_user.is_authenticated %}

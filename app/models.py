@@ -59,3 +59,8 @@ class ChangepwForm(FlaskForm):
 	passwd = PasswordField("新密码：",validators=[Required(),EqualTo('passwd2',message='两次密码不相同！')])
 	passwd2 = PasswordField("确认密码：",validators=[Required()])
 	submit = SubmitField('更改密码')
+
+class Hostpasswd(FlaskForm):
+	hip = StringField("主机IP：",[validators.Required()])
+	hpd = PasswordField("登录密码：",[validators.Required()])
+	submit = SubmitField('更改密码')
