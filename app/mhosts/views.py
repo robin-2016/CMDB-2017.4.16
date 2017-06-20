@@ -6,7 +6,7 @@ import paramiko
 
 def random_str(length=8):
 	str = ''
-	chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!#$%^&*'
+	chars = 'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz0123456789!#^%'
 	for i in range(length):
 		str+=chars[Random().randint(0,(len(chars)-1))]
 	return str
