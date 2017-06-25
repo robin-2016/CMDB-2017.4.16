@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+<div class="container">
+<h1>导航</h1>
+</div>
+<div class="container" style="font-size:35px">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">x</button>
+        {{ message }}
+        </div>
+        {% endfor %}
+	<div class="row" style="padding-top:40px">
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span></div>
+		<div><a href='/hosts'>Server</a></div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-signal" aria-hidden="true"></span></div>
+		<div><a href='#'>Network</a></div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span></div>
+		<div><a href='#'>EXSI</a></div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-hdd" aria-hidden="true"></span></div>
+		<div><a href='#'>Storage</a></div>
+		</div>
+	</div>
+	<div class="row" style="padding-top:40px">
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></div>
+		<div><a href='#'>管理IP</a></div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span></div>
+		<div><a href='#'>反向代理</a></div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span></div>
+		<div><a href='#'>SAN 交换机</a></div>
+		</div>
+		<div class="col-xs-6 col-sm-3">
+		<div><span class="glyphicon glyphicon-sort-by-attributes-alt" aria-hidden="true"></span></div>
+		<div><a href='#'>下架主机</a></div>
+		</div>
+	</div>
+</div>
+{% endblock %}

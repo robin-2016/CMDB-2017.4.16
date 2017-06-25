@@ -14,7 +14,7 @@ def login():
                         login_user(username,myform.remember_me.data)
                         session['role'] = username.role
                         print session.get('role')
-                        return redirect(url_for('main.index'))
+                        return redirect(url_for('main.home'))
                 flash('Username or Password is error!')
         return render_template('login.html',form=myform)
 

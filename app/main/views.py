@@ -112,7 +112,8 @@ def delhost():
 	myform = DelForm()
 	if request.method == 'POST':
 		if myform.validate_on_submit():
-			delhost = Hosts.query.filter_by(ip=str(myform.delip.data.encode("utf-8"))).first()
+			delhostip=str(myform.delip.data.encode("utf-8"))
+			delhost = Hosts.query.filter_by(ip=delhostip).first()
 			if delhost is not None:
 				db.session.delete(delhost)
 				db.session.commit()
@@ -124,3 +125,19 @@ def delhost():
 			return render_template('del.html',form=myform)
 	return render_template('del.html',form=myform)
 
+@main.route('/home')
+@login_required
+def home():
+	return render_template('home.html')
+
+@main.route('/pmhost')
+@login_required
+def pmhost():
+	host = Hosts.query.filter_by(htype='PM')
+	return render_template('pmhost.html',host=host)
+
+@main.route('/vmhost')
+@login_required
+def vmhost():
+	host = Hosts.query.filter_by(htype='VM')
+	return render_template('vmhost.html',host=host)

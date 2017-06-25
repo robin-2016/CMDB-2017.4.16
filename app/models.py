@@ -4,12 +4,12 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 from flask_wtf import FlaskForm
-from wtforms import TextField,validators,SubmitField,StringField,PasswordField,BooleanField
+from wtforms import TextField,validators,SubmitField,StringField,PasswordField,BooleanField,SelectField
 from wtforms.validators import Required,Length,Regexp,EqualTo
 from .dbmodels import Users
 
 class FormClass(FlaskForm):
-        htype = TextField("*类型",[validators.Required()])
+        htype = SelectField("*类型",choices=[('VM','VM'),('PM','PM')])
         mroom = TextField("*机房",[validators.Required()])
         status = TextField("*状态",[validators.Required()])
         hostname = TextField("*主机名",[validators.Required()])
@@ -35,8 +35,8 @@ class UpdateForm(FormClass):
         submit = SubmitField("更新")
 
 class DelForm(FlaskForm):
-	delip = TextField("输入要删除的IP",[validators.IPAddress()])
-	submit = SubmitField("删除")
+	delip = TextField("输入要下架主机的IP",[validators.IPAddress()])
+	submit = SubmitField("下架")
 
 class LoginForm(FlaskForm):
 	username = StringField("用户名：",[validators.Required()])

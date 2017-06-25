@@ -1,6 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container">
+{%block styles%}
+<link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">
+<link rel="stylesheet" href="../bootstrap/assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../bootstrap/assets/bootstrap-table/src/bootstrap-table.css">
+<link rel="stylesheet" href="//rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
+<link rel="stylesheet" href="../bootstrap/assets/examples.css">
+{%endblock styles%}
+{%block scripts%}
+{{super()}}
+<script src="../bootstrap/assets/jquery.min.js"></script>
+<script src="../bootstrap/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="../bootstrap/assets/bootstrap-table/src/bootstrap-table.js"></script>
+<script src="../bootstrap/assets/bootstrap-table/src/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="//rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/js/bootstrap-editable.js"></script>
+<script src="../bootstrap/ga.js"></script>
+{%endblock%}
+
         {% for message in get_flashed_messages() %}
         <div class="alert alert-warning">
           <button type="button" class="close" data-dismiss="alert">x</button>
@@ -8,12 +25,15 @@
         </div>
         {% endfor %}
 	<div class="col-sm-4">
-		<table class="table table-bordered" data-toggle="table">
+		<table class="table table-bordered" data-toggle="table" 
+			data-pagination="true"
+			data-show-export="true"
+			data-url="../json/manageruser.json">
 		 <thead>
 			<tr>
-			 <th>ID</th>
-			 <th>name</th>
-			 <th>role</th>
+			 <th data-field="id">ID</th>
+			 <th data-field="name" data-editable="true">uesrname</th>
+			 <th data-field="role" data-editable="true">role</th>
 		</thead>
 	</div>
 </div>
