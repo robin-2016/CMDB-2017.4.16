@@ -7,11 +7,13 @@
 <a href="/pmhost"><button type="button" class="btn btn-default">物理服务器</button></a>
 <a href="/vmhost"><button type="button" class="btn btn-default">虚拟服务器</button></a>
 </div>
+{%if session.get('role') == 'admin' %}
 <div class="col-lg-3 pull-right">
 <a href="/insert"><button type="button" class="btn btn-default">新增</button></a>
 <a href="/off"><button type="button" class="btn btn-default">下架</button></a>
 <a href="/export"><button type="button" class="btn btn-default">导出Excel</button></a>
 </div>
+{%endif%}
 </div>
 </div>
 <div>
@@ -48,7 +50,11 @@
 		  <th>{{a.status}}</th>
 		  <th>{{a.hostname}}</th>
 		  <th>{{a.app}}</th>
+		{%if session.get('role') == 'admin' %}
 		  <th><a href="/ip/{{a.ip}}">{{a.ip}}</a></th>
+		{%else%}
+		  <th>{{a.ip}}</th>
+		{%endif%}
 		  <th>{{a.user}}</th>
 		  <th>{{a.os}}</th>
 		  <th>{{a.active}}</th>
