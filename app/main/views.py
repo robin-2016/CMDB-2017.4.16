@@ -1,6 +1,6 @@
 from ..main import main
 from flask import render_template,request,redirect,url_for,flash,session
-from ..models import InsertForm,UpdateForm,DelForm
+from ..models import InsertForm,UpdateForm,OffForm
 #from ..conn import Hostservers,Selectupdate,Deldata
 from flask_login import login_required
 from ..dbmodels import Hosts
@@ -9,7 +9,7 @@ from .. import db
 @main.route('/hosts')
 @login_required
 def index():
-	host = Hosts.query.all()
+	host = Hosts.query.filter_by(closed=None).all()
 	return render_template('data2.html',host=host)
 
 @main.route('/insert',methods = ['GET','POST'])
@@ -18,7 +18,7 @@ def insert():
 	myform = InsertForm(request.form)
 	if request.method == 'POST':
 		if myform.validate_on_submit():
-			hostinsert = Hosts(htype=myform.htype.data,mroom=myform.mroom.data,status=myform.status.data,hostname=myform.hostname.data,app=myform.app.data,ip=myform.ip.data,user=myform.user.data,managerip=myform.mip.data,os=myform.os.data,active=myform.active.data,location=myform.location.data,produce=myform.produce.data,warranty=myform.warranty.data,model=myform.model.data,serial=myform.serial.data,cpu=myform.cpu.data,ram=myform.ram.data,disk=myform.disk.data,storage=myform.storage.data)	
+			hostinsert = Hosts(htype=myform.htype.data,mroom=myform.mroom.data,status=myform.status.data,hostname=myform.hostname.data,app=myform.app.data,ip=myform.ip.data,user=myform.user.data,managerip=myform.mip.data,os=myform.os.data,active=myform.active.data,location=myform.location.data,produce=myform.produce.data,warranty=myform.warranty.data,model=myform.model.data,serial=myform.serial.data,cpu=myform.cpu.data,ram=myform.ram.data,disk=myform.disk.data,storage=myform.storage.data,cluster=myform.cluster.data)	
 			db.session.add(hostinsert)
 			db.session.commit()
 			myform.htype.data=None
@@ -40,6 +40,7 @@ def insert():
 			myform.ram.data=None
 			myform.disk.data=None
 			myform.storage.data=None
+			myform.cluster.data=None
 			flash("Insert Successful!")
 			return render_template('insert.html',form=myform)
 		else:
@@ -72,9 +73,10 @@ def update2(ip2):
 		myform.ram.data=hostdata.ram
 		myform.disk.data=hostdata.disk
 		myform.storage.data=hostdata.storage
+		myform.cluster.data=hostdata.cluster
 	if request.method == 'POST':
         	if myform.validate_on_submit():
-			print hostdata.htype
+#			print hostdata.htype
 			hostdata.htype=request.form['htype']
 			hostdata.mroom=request.form['mroom']
 			hostdata.status=request.form['status']
@@ -94,6 +96,7 @@ def update2(ip2):
 			hostdata.ram=request.form['ram']
 			hostdata.disk=request.form['disk']
 			hostdata.storage=request.form['storage']
+			hostdata.cluster=request.form['cluster']
 			db.session.add(hostdata)
 			db.session.commit()
 			return redirect(url_for('main.index'))
@@ -109,7 +112,7 @@ def exportexcle():
 @main.route('/del',methods =['GET','POST'])
 @login_required
 def delhost():
-	myform = DelForm()
+	myform = OffForm()
 	if request.method == 'POST':
 		if myform.validate_on_submit():
 			delhostip=str(myform.delip.data.encode("utf-8"))
@@ -123,8 +126,6 @@ def delhost():
 		else:
 			flash('Delete Failed!')
 			return render_template('del.html',form=myform)
-	return render_template('del.html',form=myform)
-
 @main.route('/home')
 @login_required
 def home():
@@ -133,11 +134,35 @@ def home():
 @main.route('/pmhost')
 @login_required
 def pmhost():
-	host = Hosts.query.filter_by(htype='PM')
+	#host = Hosts.query.filter_by(htype='PM')
+	host = Hosts.query.filter_by(htype='PM',closed=None)
 	return render_template('pmhost.html',host=host)
 
 @main.route('/vmhost')
 @login_required
 def vmhost():
-	host = Hosts.query.filter_by(htype='VM')
+	host = Hosts.query.filter_by(htype='VM',closed=None)
 	return render_template('vmhost.html',host=host)
+
+@main.route('/off',methods =['GET','POST'])
+@login_required
+def off():
+	import time
+        myform = OffForm()
+        if request.method == 'POST':
+                if myform.validate_on_submit():
+                        offhostip=str(myform.offip.data.encode("utf-8"))
+                        offhost = Hosts.query.filter_by(ip=offhostip).first()
+                        if offhost is not None:
+				offhost.closed = 1
+				offhost.closedtime = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+				offhost.closeduser = myform.offuser.data
+				offhost.status = "off"
+                                db.session.add(offhost)
+                                db.session.commit()
+                                return redirect(url_for('main.index'))
+                        else:
+                                flash('Off Failed!')
+                else:
+                        flash('Off Failed!')
+	return render_template('off.html',form=myform)

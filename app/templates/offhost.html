@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+</div>
+<div>
+	<table class="table table-bordered">
+	 <thead>
+	  <tr>
+	   <th>类型</th>
+	   <th>机房</th>
+	   <th>状态</th>
+	   <th>主机名</th>
+	   <th>应用名称</th>
+	   <th>内网IP</th>
+	   <th>应用负责人</th>
+	   <th>操作系统</th>
+	   <th>CPU/核</th>
+	   <th>内存/G</th>
+	   <th>集群</th>
+	   <th>下架通知人</th>
+	   <th>下架时间</th>
+	  </tr>
+	</thead>
+	<tbody>
+	  {% for a in offhost %}
+	     <tr>
+		  <th> {{a.htype}} </th>
+		  <th>{{a.mroom}}</th>
+		  <th>{{a.status}}</th>
+		  <th>{{a.hostname}}</th>
+		  <th>{{a.app}}</th>
+		  <th>{{a.ip}}</th>
+		  <th>{{a.user}}</th>
+		  <th>{{a.os}}</th>
+		  <th>{{a.cpu}}</th>
+		  <th>{{a.ram}}</th>
+		  <th>{{a.cluster}}</th>
+		  <th>{{a.closeduser}}</th>
+		  <th>{{a.closedtime}}</th>
+	     </tr>
+	</tbody>
+	  {%endfor%}
+</div>
+{% endblock %}

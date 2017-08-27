@@ -9,7 +9,7 @@
 </div>
 <div class="col-lg-3 pull-right">
 <a href="/insert"><button type="button" class="btn btn-default">新增</button></a>
-<a href="/del"><button type="button" class="btn btn-default">下架</button></a>
+<a href="/off"><button type="button" class="btn btn-default">下架</button></a>
 <a href="/export"><button type="button" class="btn btn-default">导出Excel</button></a>
 </div>
 </div>
@@ -25,16 +25,17 @@
 	   <th>应用名称</th>
 	   <th>内网IP</th>
 	   <th>应用负责人</th>
-	   <th>管理IP</th>
 	   <th>操作系统</th>
 	   <th>激活</th>
+	   <th>CPU/核</th>
+	   <th>内存/G</th>
+	   <th>集群</th>
+	   <th>管理IP</th>
 	   <th>机架位置</th>
 	   <th>生产商</th>
 	   <th>保修日期</th>
 	   <th>设备型号</th>
 	   <th>序列号</th>
-	   <th>CPU</th>
-	   <th>内存</th>
 	   <th>硬盘Raid</th>
 	   <th>外连存储</th>
 	  </tr>
@@ -49,16 +50,17 @@
 		  <th>{{a.app}}</th>
 		  <th><a href="/ip/{{a.ip}}">{{a.ip}}</a></th>
 		  <th>{{a.user}}</th>
-		  <th>{{a.managerip}}</th>
 		  <th>{{a.os}}</th>
 		  <th>{{a.active}}</th>
+		  <th>{{a.cpu}}</th>
+		  <th>{{a.ram}}</th>
+		  <th>{{a.cluster}}</th>
+		  <th>{{a.managerip}}</th>
 		  <th>{{a.location}}</th>
 		  <th>{{a.produce}}</th>
 		  <th>{{a.warranty}}</th>
 		  <th>{{a.model}}</th>
 		  <th>{{a.serial}}</th>
-		  <th>{{a.cpu}}</th>
-		  <th>{{a.ram}}</th>
 		  <th>{{a.disk}}</th>
 		  <th>{{a.storage}}</th>
 	     </tr>

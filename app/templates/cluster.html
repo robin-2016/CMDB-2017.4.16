@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+<div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">x</button>
+        {{ message }}
+        </div>
+        {% endfor %}
+	<div class="container">
+	<h2>集群资源使用情况</h2>
+		<table class="table table-bordered">
+		<thead>
+		<tr>
+		 <th>集群名称</th>
+		 <th>总CPU数/核</th>
+		 <th>总内存/G</th>
+		 <th>已使用CPU数/核</th>
+		 <th>已使用内存/G</th>
+		</tr>
+		<tbody>
+		 {%for a in cluster%}
+		  <tr>
+			<th>{{a.name}}</th>
+			<th>{{a.cpus}}</th>
+			<th>{{a.mem}}</th>
+			<th>{{a.used_cpus}}</th>
+			<th>{{a.used_mem}}</th>
+		 </tr>
+		 {%endfor%}
+		</tbody>
+	</div>
+</div>
+{% endblock %}

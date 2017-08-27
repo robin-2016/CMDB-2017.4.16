@@ -29,4 +29,8 @@ def creat_app(config_name):
 	app.register_blueprint(manageruser_blueprint,url_prefix='/manageruser')
 	from .mhosts import mhosts as mhosts_blueprint
 	app.register_blueprint(mhosts_blueprint,url_prefix='/mhosts')
+	from .cluster import cluster as cluster_blueprint
+	app.register_blueprint(cluster_blueprint,url_prefix='/cluster')
+	from .offhost import offhost as offhost_blueprint
+	app.register_blueprint(offhost_blueprint,url_prefix='/offhost')
 	return app
