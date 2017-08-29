@@ -2,8 +2,10 @@ from ..cluster import cluster
 from ..dbmodels import Cluster,Hosts
 from flask import flash,redirect,url_for,render_template
 from .. import db
+from flask_login import login_required
 
 @cluster.route('/')
+@login_required
 def esxi():
 	jisuan('cluster1')
 	jisuan('cluster2')		
