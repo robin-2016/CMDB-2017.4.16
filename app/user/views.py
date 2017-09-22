@@ -13,7 +13,7 @@ def login():
                 if username is not None and username.verify_password(myform.passwd.data):
                         login_user(username,myform.remember_me.data)
                         session['role'] = username.role
-                        print session.get('role')
+                        #print session.get('role')
                         return redirect(url_for('main.home'))
                 flash('Username or Password is error!')
         return render_template('login.html',form=myform)

@@ -25,60 +25,60 @@ class Hosts(db.Model):
 	__tablename__= 'host'
 	nu = db.Column(db.Integer,primary_key=True)
 	htype = db.Column(db.String(10))
-	mroom = db.Column(db.String(6))
 	status = db.Column(db.String(8))
 	hostname = db.Column(db.String(80))
 	app = db.Column(db.String(100))
 	ip = db.Column(db.String(15))
 	user = db.Column(db.String(50))
-	managerip = db.Column(db.String(50))
 	os = db.Column(db.String(50))
 	active = db.Column(db.String(4))
-	location = db.Column(db.String(20))
-	produce = db.Column(db.String(20))
-	warranty = db.Column(db.String(20))
-	model = db.Column(db.String(50))
-	serial = db.Column(db.String(100))
 	cpu = db.Column(db.Integer)
 	ram = db.Column(db.Integer)
 	disk = db.Column(db.String(20))
-	storage = db.Column(db.String(20))
-	cluster = db.Column(db.String(20))
-	closed = db.Column(db.String(10))
-	closedtime = db.Column(db.String(60))
+	group_id = db.Column(db.Integer,db.ForeignKey('devegroup.nu'))
+	cluster_id = db.Column(db.Integer,db.ForeignKey('cluster.nu'))
+	project_id = db.Column(db.Integer,db.ForeignKey('project.nu'))
+	closedtime = db.Column(db.DateTime)
 	closeduser = db.Column(db.String(40))
 
-#class Delhosts(Hosts):
-#	__tablename__= 'delhost'
-#	__table_args__ = {"useexiting": True}
-#	nu = db.Column(db.Integer,primary_key=True)
-#	htype = db.Column(db.String(10))
-#	mroom = db.Column(db.String(6))
-#	status = db.Column(db.String(8))
-#	hostname = db.Column(db.String(80))
-#	app = db.Column(db.String(100))
-#	ip = db.Column(db.String(15),unique=True,index=True)
-#	user = db.Column(db.String(50))
-#	managerip = db.Column(db.String(50))
-#	os = db.Column(db.String(50))
-#	active = db.Column(db.String(4))
-#	location = db.Column(db.String(20))
-#	produce = db.Column(db.String(20))
-#	warranty = db.Column(db.String(20))
-#	model = db.Column(db.String(50))
-#	serial = db.Column(db.String(100))
-#	cpu = db.Column(db.Integer)
-#	ram = db.Column(db.Integer)
-#	disk = db.Column(db.String(20))
-#	storage = db.Column(db.String(20))
-#	cluster = db.Column(db.String(20))
+class Pm(db.Model):
+        __tablename__= 'pm'
+        nu = db.Column(db.Integer,primary_key=True)
+        hostname = db.Column(db.String(80))
+	cputype = db.Column(db.String(50))
+	cputoal = db.Column(db.Integer)
+	cpunu = db.Column(db.Integer)
+	cputh = db.Column(db.Integer)
+	memtoal = db.Column(db.Integer)
+	memnu = db.Column(db.Integer)
+	memsize = db.Column(db.Integer)
+        managerip = db.Column(db.String(50))
+        location = db.Column(db.String(20))
+        produce = db.Column(db.String(20))
+        warranty = db.Column(db.String(20))
+        model = db.Column(db.String(50))
+        serial = db.Column(db.String(100))
+        disk = db.Column(db.String(20))
 
 class Cluster(db.Model):
 	__tablename__= 'cluster'
 	nu = db.Column(db.Integer,primary_key=True)
-	name = db.Column(db.String(20))
+	cname = db.relationship('Hosts',backref='cluster')
 	cpus = db.Column(db.Integer)
 	mem = db.Column(db.Integer)
 	used_cpus = db.Column(db.Integer)
 	used_mem = db.Column(db.Integer)
-		
+
+class devegroup(db.Model):
+	__tablename__= 'devegroup'
+	nu = db.Column(db.Integer,primary_key=True)
+	gname = db.relationship('Hosts',backref='gname')
+
+class Project(db.Model):
+	__tablename__= 'project'
+	nu = db.Column(db.Integer,primary_key=True)
+	pname = db.relationship('Hosts',backref='pname')
+#class Group(db.Model):
+#	__tablename__= 'group'
+#	nu = db.Column(db.Integer,primary_key=True)
+#	pname = db.Column(db.String(60))
